@@ -30,7 +30,16 @@ def Earthquake_by_id(id):
         body = {'message': f'Earthquake {id} not found.'}
         status = 404
     return make_response(body, status)
-
+@app.route('/earthquakes/magnitude/<float:magnitude>')
+def Earthquake_min_magnitude(magnitude):
+    max_magnitude = []
+    for magnitude in Earthquake.query.filter(Earthquake.magnitude >= magnitude).all():
+        max_magnitude.append(magnitude.to_dict())
+    body = {
+        'count': len(max_magnitude),
+        'quakes': max_magnitude
+    }
+    return make_response(body, 200)
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
